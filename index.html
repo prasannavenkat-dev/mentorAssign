@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 style="text-align: center;">STUDENTS & MENTORS</h1>
+    
+     <h2>Show Data</h2>
+       <form action="/showMentors" method="GET">
+        <label>Mentors List : </label>
+         <input type="submit" value="Show Mentors">
+    
+    </form>
+   <br>
+
+    <form action="/showStudents" method="GET">
+        <label>Students List : </label>
+        
+        <input type="submit" value="Show Students">
+   
+   </form>
+   <br>
+   <form action="/showAssign" method="GET">
+    <label>Assigned Data : </label>
+    
+    <input type="submit" value="Show Data">
+
+</form>
+
+    <h2>Create Mentor</h2>
+    <form action="/mentorlist" method="POST">
+        <label>
+            Mentor Id
+        </label>
+          <input type="text" name="mentorId" placeholder="Mentor ID" required>
+          <br>
+        <label>
+            Mentor Name
+        </label>
+          <input type="text" name="mentorName" placeholder="Mentor Name" required>
+          <input type="submit" value="Add Mentor">
+    </form>
+    
+
+    <h2>Create Student</h2>
+
+    <form action="/studentlist" method="POST">
+        <label>
+            Student Id
+        </label>
+          <input type="text" name="studentId" placeholder="Student ID" required>
+          <br>
+        <label>
+            Student Name
+        </label>
+          <input type="text" name="studentName" placeholder="Student Name" required>
+          <input type="submit" value="Add Student">
+
+    </form>
+
+
+    <h2>Assign Mentor</h2>
+
+    <form action="/assignmentor" method="POST">
+        <label>
+            Mentor
+        </label>
+          <input type="text" name="Mentor" placeholder="Mentor Name" required>
+          <br>
+          <br>
+          <label>
+            Student 1
+        </label>
+        <input type="text" name="student1" placeholder="student 1" required><br><br>
+        <label>
+            Student 2
+        </label>
+        <input type="text" name="student2" placeholder="student 2" required><br><br>
+       
+
+         <br>
+          <input type="submit" value="Assign Mentor">
+
+
+       
+
+          
+
+    </form>
+
+      
+    <h2>Students assigned to Mentor</h2>
+    <form action="/mentorToStudents" method="POST">
+        <label>
+            Mentor Id
+        </label>
+          <input type="text" name="mentorId" placeholder="Mentor ID" required>
+          <br> 
+          <br>
+          <input type="submit" value="Show Students">
+    </form>
+
+</body>
+</html>
