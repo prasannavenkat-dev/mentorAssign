@@ -155,16 +155,17 @@ app.post("/studentlist", async function (req, res) {
 app.post("/assignmentor", async function (req, res) {
 
     try {
-
+   console.log('hi');
         let clientInfo = await mongoClient.connect(dbUrl);
         let db = clientInfo.db("stud_mentor")
 
 
-        let Mentor = req.body.Mentor;
+        let MentorId = req.body.MentorId;
         let student1 = req.body.student1;
         let student2 = req.body.student2;
+  MentorId = MentorId.toString()
 
-        let mentorCollection = await db.collection('mentors').find({ mentorName: Mentor }).toArray();
+        let mentorCollection = await db.collection('mentors').find({ _id: MentorId }).toArray();
         let studentList1 = await db.collection('students').find({ "studentName": student1 }).toArray();
         let studentList2 = await db.collection('students').find({ "studentName": student2 }).toArray();
 
@@ -175,21 +176,24 @@ app.post("/assignmentor", async function (req, res) {
 
         let userStud = []
         let mentoredStudentArr;
+        let Mentor;
+
         if (mentorCollection.length === 0) {
             msg = 'Mentor not found';
             res.status(400).json({ message: msg })
             clientInfo.close()
         }
-        console.log(studentList1);
+          
+        Mentor = mentorCollection[0].mentorName
+
         if (studentList1.length === 0 || studentList2.length === 0) {
             msg = 'Students not found';
             res.status(400).json({ message: msg })
             clientInfo.close()
         }
-
         if (mentoredStudent.length) {
 
-
+             
             mentoredStudentArr = mentoredStudent[0].List
             //CHECKING STUDENT1 ALREADY MENTORED
             if (mentoredStudentArr.includes(student1) === true) {
@@ -217,37 +221,45 @@ app.post("/assignmentor", async function (req, res) {
             userStud.push(student1, student2);
         }
 
+
         //READING DATA
         let dataAssignDb;
 
         try {
             dataAssignDb = await db.collection('assign').find({ _id: mentorCollection[0]._id }).toArray();
-
+            console.log('dataAssignDb',dataAssignDb);
         }
         catch (error) {
-            dataAssignDb = []
+           console.log('error in dataAssignDb');
         }
 
         //  let dataAssignDb=[];
 
         let data;
         if (dataAssignDb.length) {
-            let data1 = dataAssignDb[0][Mentor];
+            let data1 = dataAssignDb[0][`${Mentor}`];
+            console.log(data1);
             data = data1.concat(userStud)
+
         }
 
         else if (dataAssignDb.length === 0) {
             data = userStud;
 
+
         }
 
         if (userStud.length === 0) {
             msg = msg + 'Already Mentored.Try with others!!';
+
             res.status(400).json({ message: msg })
+
+            console.log("3");
+
             clientInfo.close()
         }
         else if ((userStud.length === 1 && flag === 1) || (userStud.length === 1 && flag === 2)) {
-
+          
             msg = msg + 'Already Mentored. ' + userStud[0] + ' Assigned to ' + Mentor;
             db.collection('assign').findOneAndUpdate({ _id: mentorCollection[0]._id }, {
                 //DATA
@@ -259,6 +271,7 @@ app.post("/assignmentor", async function (req, res) {
 
                 if (err) throw err;
             })
+            console.log("4");
 
             let arr = mentoredStudentArr.concat(userStud)
 
@@ -295,6 +308,7 @@ app.post("/assignmentor", async function (req, res) {
                     if (err) throw err;
                 })
                 let arr = mentoredStudentArr.concat(userStud)
+
                 db.collection('mentoredStudent').findOneAndUpdate({ _id: '1' }, {
                     //DATA
 
@@ -338,7 +352,9 @@ app.post("/assignmentor", async function (req, res) {
                 })
             }
 
-        }
+       
+    }
+
         let finalData = await db.collection('assign').find().toArray()
         res.status(200).json(finalData)
         clientInfo.close();
